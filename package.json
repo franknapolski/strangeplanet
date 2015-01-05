@@ -1,0 +1,19 @@
+{
+  "name": "StrangePlanet",
+  "title": "Strange Planet Website",
+  "author": "Frank Napolski",
+  "copyright": "2015",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-cssmin": "*",
+    "grunt-contrib-less": "*",
+    "grunt-contrib-sass": "^0.8.1",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-cssc": "*",
+    "grunt-htmlhint": "*",
+    "matchdep": "*"
+  }
+}
