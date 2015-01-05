@@ -1,3 +1,9 @@
+/*!
+ * Strange Planet Gruntfile
+ * @author Frank Napolski
+ */
+
+
 module.exports = function(grunt){
 
    "use strict";
@@ -7,27 +13,6 @@ module.exports = function(grunt){
 
         pkg: grunt.file.readJSON('package.json'),
 
-        project: {
-            app: 'app',
-            assets: '<%= project.app %>/assets',
-            src: '<%= project.assets %>/src',
-            css: [
-                '<%= project.src %>/scss/style.scss'
-            ],
-            js: [
-                '<%= project.src %>/js/*.js'
-            ]
-        },
-
-        banner: '/*!\n' +
-                  ' * <%= pkg.name %>\n' +
-                  ' * <%= pkg.title %>\n' +
-                  ' * <%= pkg.url %>\n' +
-                  ' * @author <%= pkg.author %>\n' +
-                  ' * @version <%= pkg.version %>\n' +
-                  ' * Copyright <%= pkg.copyright %>. <%= pkg.license %> licensed.\n' +
-                  ' */\n'
-        },
 
         cssc: {
             build: {
@@ -37,51 +22,23 @@ module.exports = function(grunt){
                     consolidateMediaQueries:    true
                 },
                 files: {
-                    'build/css/master.css': 'build/css/master.css'
+                    'styles.css': 'styles.css'
                 }
             }
         },
 
         cssmin: {
             build: {
-                src: 'build/css/master.css',
-                dest: 'build/css/master.css'
+                src: 'styles.css',
+                dest: 'styles.css'
             }
         },
 
-        less: {
-          development: {
-            options: {
-              paths: ["assets/css"]
-            },
-            files: {
-              "assets/css/master.css": "assets/css/master.less"
-            }
-          },
-
-          production: {
-            options: {
-              paths: ["assets/css"],
-              cleancss: true,
-            },
-            files: {
-              "build/css/master.css": "assets/css/master.less"
-            }
-          }
-        },
-
-        watch: {
-            html: {
-                files: ['index.html'],
-                tasks: ['htmlhint']
-            },
-            js: {
-                files: ['assets/js/base.js'],
-                tasks: ['uglify']
-            },
-            css: {
-                files: ['assets/css/**/*.less'],
-                tasks: ['buildcss']
+        sass: {
+            build: {
+                files: {
+                    'styles.css': 'assets/scss/master.scss'
+                }
             }
         },
 
@@ -114,14 +71,31 @@ module.exports = function(grunt){
         uglify: {
             build: {
                 files: {
-                    'build/js/reflex.min.js': ['assets/js/reflex.js']
+                    'js/base.min.js': ['assets/js/base.js']
                 }
+            }
+        },
+
+        watch: {
+            html: {
+                files: ['index.html'],
+                tasks: ['htmlhint']
+            },
+            js: {
+                files: ['assets/js/base.js'],
+                tasks: ['uglify']
+            },
+            sass: {
+                files: 'assets/scss/{,*/}*.{scss,sass}',
+                tasks: ['sass', 'cssc', 'cssmin']
             }
         }
 
     });
 
-    grunt.registerTask('default',   []);
-    grunt.registerTask('buildcss',  ['less', 'cssc', 'cssmin']);
+    require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+    grunt.registerTask('default', ['watch']);
+    //grunt.registerTask('buildcss',  ['sass', 'cssc', 'cssmin']);
+
 
 };
